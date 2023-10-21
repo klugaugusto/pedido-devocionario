@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Pedido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .campo {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        .campo input[type="number"] {
+            width: 50%;
+            margin-right: 2%;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Formulário de Pedido</h1>
+        <form id="pedidoForm">
+            <div class="campo">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" required>
+            </div>
+            <div class="campo">
+                <label for="senhasDiarias">Senhas Diárias:</label>
+                <input type="number" id="senhasDiarias" min="0" step="1" value="0">
+                <label for="valorDiario">Valor Individual:</label>
+                <input type="number" id="valorDiario" min="0" step="0.01" value="0.00">
+            </div>
+            <div class="campo">
+                <label for="casteloForte">Castelo Forte:</label>
+                <input type="number" id="casteloForte" min="0" step="1" value="0">
+                <label for="valorCastelo">Valor Individual:</label>
+                <input type="number" id="valorCastelo" min="0" step="0.01" value="0.00">
+            </div>
+            <div class="campo">
+                <label for="sementeEsperanca">Semente de Esperança:</label>
+                <input type="number" id="sementeEsperanca" min="0" step="1" value="0">
+                <label for="valorSemente">Valor Individual:</label>
+                <input type="number" id="valorSemente" min="0" step="0.01" value="0.00">
+            </div>
+            <div class="campo">
+                <label for="valorTotal">Valor Total:</label>
+                <input type="text" id="valorTotal" readonly>
+            </div>
+            <button type="button" onclick="enviarPedido()">Enviar Pedido por WhatsApp</button>
+        </form>
+    </div>
+    <script>
+        function calcularTotal() {
+            const senhasDiarias = parseFloat(document.getElementById('senhasDiarias').value);
+            const casteloForte = parseFloat(document.getElementById('casteloForte').value);
+            const sementeEsperanca = parseFloat(document.getElementById('sementeEsperanca').value);
+            const valorDiario = parseFloat(document.getElementById('valorDiario').value);
+            const valorCastelo = parseFloat(document.getElementById('valorCastelo').value);
+            const valorSemente = parseFloat(document.getElementById('valorSemente').value);
+
+            const totalSenhasDiarias = senhasDiarias * valorDiario;
+            const totalCasteloForte = casteloForte * valorCastelo;
+            const totalSementeEsperanca = sementeEsperanca * valorSemente;
+
+            const valorTotal = totalSenhasDiarias + totalCasteloForte + totalSementeEsperanca;
+            document.getElementById('valorTotal').value = valorTotal.toFixed(2);
+        }
+
+        function enviarPedido() {
+            const nome = document.getElementById('nome').value;
+            const valorTotal = document.getElementById('valorTotal').value;
+
+            // Obtenha o número de telefone do usuário (implementação pode variar)
+            const numeroTelefone = prompt("Por favor, insira o número de telefone para enviar o pedido por WhatsApp:");
+
+            if (numeroTelefone) {
+                const mensagem = `Olá! Meu nome é ${nome} e o valor total do pedido é R$ ${valorTotal}.`;
+
+                // Abra o aplicativo de contatos (seleção de contato deve ser feita manualmente pelo usuário)
+                window.open(`whatsapp://send?text=${encodeURIComponent(mensagem)}&phone=${encodeURIComponent(numeroTelefone)}`);
+            }
+        }
+
+        // Adicionando event listener para calcular total automaticamente
+        const inputs = document.querySelectorAll('input[type="number"]');
+        inputs.forEach(input => {
+            input.addEventListener('input', calcularTotal);
+        });
+    </script>
+</body>
+</html>
